@@ -8,4 +8,4 @@ userRouter.route("/")
 	.post(userController.addOne);
 
 userRouter.route("/:id")
-	.get(userController.findOne);
+	.get(userController.findOneById);

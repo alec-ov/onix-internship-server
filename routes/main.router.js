@@ -3,4 +3,4 @@ import { userRouter } from "./user.router.js";
 
 export const mainRouter = new Router();
 
-mainRouter.use("/user", userRouter);
+mainRouter.use("/json/user", userRouter);
