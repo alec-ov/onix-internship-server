@@ -1,11 +1,11 @@
 import * as dotenv from "dotenv";
 dotenv.config();
 
-import { app } from "./core/express";
-import { mainRouter } from "./routes/main.router";
+import { app } from "./core/express.js";
+import { mainRouter } from "./routes/main.router.js";
 
 const PID = process.pid;
-const PORT = process.env.PORT ?? 3000;
+const PORT = Number(process.env.PORT ?? 3000);
 
 console.log("Starting server. PID:", PID);
 
