@@ -13,10 +13,18 @@ export const TStyle = {
 	Reset: "\x1b[0m",
 	Bright: "\x1b[1m",
 	Dim: "\x1b[2m",
+
+	Italic: "\x1b[3m",
 	Underscore: "\x1b[4m",
+	Strike: "\x1b[9m",
 	Blink: "\x1b[5m",
 	Reverse: "\x1b[7m",
 	Hidden: "\x1b[8m",
+
+	DoubleUnderline: "\x1b[21m",
+	Overline: "\x1b[53m",
+
+	Alter: "\x1b[12m",
 
 	FG: {
 		Black: "\x1b[30m",

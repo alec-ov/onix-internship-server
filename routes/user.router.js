@@ -8,4 +8,9 @@ userRouter.route("/")
 	.post(userController.addOne);
 
 userRouter.route("/:id")
-	.get(userController.findOneById);
+	.get(userController.findOneById)
+	.delete(userController.deleteOneById)
+	.post(userController.updateOneById);
+
+userRouter.route("/name/:name")
+	.get(userController.findOneByName);

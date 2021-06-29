@@ -18,6 +18,9 @@ export const userService = {
 	findOneById: async function (id) {
 		return await User.findById(id);
 	},
+	findByName: async function (name) {
+		return await User.find({name: String(name)});
+	},
 
 	findAll: async function () {
 		return await User.find();
@@ -25,5 +28,16 @@ export const userService = {
 
 	createOne: async function (user) {
 		return await User.create(user);
+	},
+
+	deleteOneById: async function (id) {
+		if (!mongoose.isValidObjectId(id)) return null;
+		return await User.deleteOne({_id: id})
+		
+	},
+
+	updateOneById: async function (id, newUser) {
+		if (!mongoose.isValidObjectId(id)) return null;
+		return await User.updateOne({_id: id}, newUser);
 	}
 };
