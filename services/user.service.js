@@ -38,6 +38,6 @@ export const userService = {
 
 	updateOneById: async function (id, newUser) {
 		if (!mongoose.isValidObjectId(id)) return null;
-		return await User.updateOne({_id: id}, newUser);
+		return await User.updateOne({_id: id}, newUser, {runValidators: true});
 	}
 };

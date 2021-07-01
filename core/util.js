@@ -24,8 +24,6 @@ export const TStyle = {
 	DoubleUnderline: "\x1b[21m",
 	Overline: "\x1b[53m",
 
-	Alter: "\x1b[12m",
-
 	FG: {
 		Black: "\x1b[30m",
 		Red: "\x1b[31m",

@@ -20,7 +20,7 @@ function Connect() {
 Connect();
 const db = mongoose.connection;
 db.on("disconnected", () => {
-	console.log(TStyle.t("MongoDB connection lost! Retrying", TStyle.Warning));
+	console.log(TStyle.t("MongoDB connection lost! Retrying...", TStyle.Warning));
 	Connect();
 });
 db.on("connected", () => {
