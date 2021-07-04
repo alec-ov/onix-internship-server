@@ -3,11 +3,17 @@ import mongoose from "mongoose";
 const userSchema = new mongoose.Schema({
 	name: {
 		type: String,
-		required: true
+		trim: true,
+		require: true
 	},
-	age: {
-		type: Number,
-		required: true
+	email: {
+		type: String,
+		trim: true,
+		require: true
+	},
+	birthday: {
+		type: mongoose.Schema.Types.Date,
+		require: true,
 	}
 });
 
@@ -16,28 +22,30 @@ const User = mongoose.model("User", userSchema);
 export const userService = {
 
 	findOneById: async function (id) {
-		return await User.findById(id);
+		return User.findById(id).lean();
 	},
 	findByName: async function (name) {
-		return await User.find({name: String(name)});
+		return User.find({name: String(name)}).lean();
 	},
 
 	findAll: async function () {
-		return await User.find();
+		return User.find().lean();
 	},
 
 	createOne: async function (user) {
-		return await User.create(user);
+		const newUser = new User(user);
+		return newUser.save();
 	},
 
 	deleteOneById: async function (id) {
 		if (!mongoose.isValidObjectId(id)) return null;
-		return await User.deleteOne({_id: id})
-		
+		return User.deleteOne({_id: id});
 	},
 
 	updateOneById: async function (id, newUser) {
 		if (!mongoose.isValidObjectId(id)) return null;
-		return await User.updateOne({_id: id}, newUser, {runValidators: true});
+		const user = await User.findById(id);
+		user.set(newUser);
+		return user.save();
 	}
 };

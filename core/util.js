@@ -9,6 +9,9 @@ export function Catcher(handler) {
 	};
 }
 
+export const JoiOptions = { abortEarly: false };
+export const validationOptions = { keyByField: true };
+
 export const TStyle = {
 	Reset: "\x1b[0m",
 	Bright: "\x1b[1m",

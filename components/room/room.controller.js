@@ -1,8 +1,8 @@
-import { Catcher } from "../core/util.js";
+import { Catcher } from "../../core/util.js";
 import { StatusCodes } from "http-status-codes";
-import { chatService } from "../services/chat.service.js";
+import { chatService } from "./room.service.js";
 
-export const chatController = {
+export const roomController = {
 	findAll: Catcher(async (req, res) => {
 		res.status(StatusCodes.OK);
 		res.json({ status: StatusCodes.OK, message: "found", data: await chatService.findAll() });
@@ -62,9 +62,9 @@ export const chatController = {
 		delete newUser._id;
 
 		const data = await chatService.updateOneById(id, newUser);
-		if (data?.nModified === 1) {
+		if (data) {
 			res.status(StatusCodes.OK);
-			res.json({ status: StatusCodes.OK, message: "updated" });
+			res.json({ status: StatusCodes.OK, message: "updated", data });
 			return;
 		}
 		
