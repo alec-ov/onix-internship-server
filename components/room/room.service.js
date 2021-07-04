@@ -35,12 +35,5 @@ export const roomService = {
 		const chat = await Room.findById(chatId);
 		chat.users.push(userId);
 		return chat.save({runValidators: true});
-	},
-	addMessage: async function (chatId, message) {
-		const chat = await Room.findById(chatId);
-		if (chat.users.includes(message.author)) {
-			chat.messages.push(message);
-		}
-		return chat.save({runValidators: true});
 	}
 };

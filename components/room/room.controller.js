@@ -1,15 +1,17 @@
 import { Catcher } from "../../core/util.js";
 import { StatusCodes } from "http-status-codes";
-import { chatService } from "./room.service.js";
+import { roomService } from "./room.service.js";
+import { messageService } from "../message/message.service.js";
+import { UnauthorizedException } from "../../core/error.js";
 
 export const roomController = {
 	findAll: Catcher(async (req, res) => {
 		res.status(StatusCodes.OK);
-		res.json({ status: StatusCodes.OK, message: "found", data: await chatService.findAll() });
+		res.json({ status: StatusCodes.OK, message: "found", data: await roomService.findAll() });
 	}),
 	findOneById: Catcher(async (req, res) => {
 		const id = req.params.id;
-		const chat = await chatService.findOneById(id);
+		const chat = await roomService.findOneById(id);
 		if (chat) {
 			res.status(StatusCodes.OK);
 			res.json({ status: StatusCodes.OK, message: "found", data: chat });
@@ -21,7 +23,7 @@ export const roomController = {
 	}),
 	findOneByName: Catcher(async (req, res) => {
 		const name = String(req.params.name);
-		const chat = await chatService.findByName(name);
+		const chat = await roomService.findByName(name);
 		if (chat) {
 			res.status(StatusCodes.OK);
 			res.json({ status: StatusCodes.OK, message: "found", data: chat });
@@ -34,7 +36,7 @@ export const roomController = {
 	addOne: Catcher(async (req, res, next) => {
 		const chat = req.body;
 		try {
-			const result = await chatService.createOne(chat);
+			const result = await roomService.createOne(chat);
 			res.status(StatusCodes.CREATED);
 			res.json({ status: StatusCodes.CREATED, message: "created", data: result });
 		}
@@ -46,7 +48,7 @@ export const roomController = {
 	}),
 	deleteOneById: Catcher(async (req, res) => {
 		const id = req.params.id;
-		const chat = await chatService.deleteOneById(id);
+		const chat = await roomService.deleteOneById(id);
 		if (chat) {
 			res.status(StatusCodes.OK);
 			res.json({ status: StatusCodes.OK, message: "deleted", data: chat });
@@ -61,46 +63,46 @@ export const roomController = {
 		const newUser = req.body;
 		delete newUser._id;
 
-		const data = await chatService.updateOneById(id, newUser);
+		const data = await roomService.updateOneById(id, newUser);
 		if (data) {
 			res.status(StatusCodes.OK);
 			res.json({ status: StatusCodes.OK, message: "updated", data });
 			return;
 		}
-		
+
 		res.status(StatusCodes.NOT_FOUND);
 		res.json({ status: StatusCodes.NOT_FOUND, message: `updating chat #${id} failed` });
-		
+
 	}),
 
-	addMessage: Catcher(async (req, res) => {
-		const id = req.params.id;
-		const message = req.body;
-
-		const data = await chatService.addMessage(id, message);
-		if (data?.nModified === 1) {
-			res.status(StatusCodes.OK);
-			res.json({ status: StatusCodes.OK, message: "sent" });
-			return;
-		}
-		
-		res.status(StatusCodes.NOT_FOUND);
-		res.json({ status: StatusCodes.NOT_FOUND, message: `sending chat #${id} failed` });
-		
-	}),
 	addUser: Catcher(async (req, res) => {
 		const id = req.params.id;
 		const userId = req.body.id;
 
-		const data = await chatService.addUser(id, userId);
+		const data = await roomService.addUser(id, userId);
 		if (data?.nModified === 1) {
 			res.status(StatusCodes.OK);
 			res.json({ status: StatusCodes.OK, message: "Added user to chat" });
 			return;
 		}
-		
+
 		res.status(StatusCodes.NOT_FOUND);
 		res.json({ status: StatusCodes.NOT_FOUND, message: `joining chat #${id} failed` });
-		
+
+	}),
+
+	addMessage: Catcher(async (req, res) => {
+		const roomId = req.params.id;
+		const room = await roomService.findOneById(roomId);
+		const message = req.body;
+		if (!room.users.includes(message.author)) {
+			throw new UnauthorizedException(`Invalid author for chat #${roomId}`);
+		}
+		res.send({ data: await messageService.send(message) });
+	}),
+	getMessages: Catcher(async (req, res) => {
+		const roomId = req.params.id;
+		const date = req.query.date;
+		res.send({ data: await messageService.getAll(roomId, date) });
 	})
 };

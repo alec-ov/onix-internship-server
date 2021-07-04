@@ -22,6 +22,6 @@ const messageSchema = new mongoose.Schema({
 		default: null,
 		ref: "Message"
 	}
-});
+}, { timestamps: { createdAt: "sent_at", updatedAt: "edited_at" } });
 
-export const Message = mongoose.model("Room", messageSchema);
+export const Message = mongoose.model("Message", messageSchema);

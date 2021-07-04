@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { validate } from "express-validation";
-import { userController } from "../controllers/user.controller.js";
+import { userController } from "./user.controller.js";
 import { JoiOptions, validationOptions } from "../../core/util.js";
 import { userValidator } from "./user.validator.js";
 

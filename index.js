@@ -6,7 +6,7 @@ if ((process.env.NODE_ENV || "development") == "development") {
 import "./core/db.js";
 import { addLastMiddleware, app } from "./core/express.js";
 import { TStyle } from "./core/util.js";
-import { mainRouter } from "./routes/main.router.js";
+import { mainRouter } from "./components/main.router.js";
 
 const PID = process.pid;
 const PORT = Number(process.env.PORT ?? 3000);
