@@ -12,15 +12,14 @@ const dbUrl = // eslint-disable-next-line max-len
 function Connect() {
 	console.log(TStyle.t("Connecting to MongoDB...", TStyle.Bright));
 	mongoose.connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true }).catch((err) => {
-		console.error(TStyle.t("connection error:", TStyle.Error));
-		console.error(err);
+		console.error(TStyle.Error+"connection error:", err, TStyle.Reset);
 	});
 }
 
 Connect();
 const db = mongoose.connection;
 db.on("disconnected", () => {
-	console.log(TStyle.t("MongoDB connection lost! Retrying", TStyle.Warning));
+	console.log(TStyle.t("MongoDB connection lost! Retrying...", TStyle.Warning));
 	Connect();
 });
 db.on("connected", () => {

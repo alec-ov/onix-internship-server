@@ -9,6 +9,9 @@ export function Catcher(handler) {
 	};
 }
 
+export const JoiOptions = { abortEarly: false };
+export const validationOptions = { keyByField: true };
+
 export const TStyle = {
 	Reset: "\x1b[0m",
 	Bright: "\x1b[1m",
@@ -23,8 +26,6 @@ export const TStyle = {
 
 	DoubleUnderline: "\x1b[21m",
 	Overline: "\x1b[53m",
-
-	Alter: "\x1b[12m",
 
 	FG: {
 		Black: "\x1b[30m",

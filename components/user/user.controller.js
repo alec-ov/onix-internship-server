@@ -1,6 +1,6 @@
-import { Catcher } from "../core/util.js";
+import { Catcher } from "../../core/util.js";
 import { StatusCodes } from "http-status-codes";
-import { userService } from "../services/user.service.js";
+import { userService } from "./user.service.js";
 
 export const userController = {
 	findAll: Catcher(async (req, res) => {
@@ -62,9 +62,10 @@ export const userController = {
 		delete newUser._id;
 
 		const data = await userService.updateOneById(id, newUser);
-		if (data?.nModified === 1) {
+		console.log(data);
+		if (data) {
 			res.status(StatusCodes.OK);
-			res.json({ status: StatusCodes.OK, message: "updated" });
+			res.json({ status: StatusCodes.OK, message: "updated", data });
 			return;
 		}
 		

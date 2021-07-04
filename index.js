@@ -4,8 +4,7 @@ if ((process.env.NODE_ENV || "development") == "development") {
 }
 
 import "./core/db.js";
-
-import { app } from "./core/express.js";
+import { addLastMiddleware, app } from "./core/express.js";
 import { TStyle } from "./core/util.js";
 import { mainRouter } from "./routes/main.router.js";
 
@@ -16,6 +15,7 @@ console.log(TStyle.t("Starting server. PID:", TStyle.Bright), PID);
 
 app.use(mainRouter);
 
+addLastMiddleware();
 app.listen(PORT, () => {
 	console.log(TStyle.t("Listening on port:", TStyle.Success), PORT);
 });
