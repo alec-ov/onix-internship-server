@@ -6,6 +6,10 @@ export class UnauthorizedException extends Error {
 	constructor(message) {
 		super(message);
 		this.status = StatusCodes.UNAUTHORIZED;
+		this.message = message;
+	}
+	toJSON() {
+		return { message: this.message, status: this.status };
 	}
 }
 

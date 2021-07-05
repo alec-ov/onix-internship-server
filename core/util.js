@@ -1,3 +1,5 @@
+import mongoose from "mongoose";
+
 export function Catcher(handler) {
 	return async (req, res, next) => {
 		try {
@@ -11,6 +13,15 @@ export function Catcher(handler) {
 
 export const JoiOptions = { abortEarly: false };
 export const validationOptions = { keyByField: true };
+
+export const joiIsID = (value, helpers) => {
+	if (mongoose.isValidObjectId(value)) {
+		return value;
+	}
+	else {
+		return helpers.error("any.invalid");
+	}
+};
 
 export const TStyle = {
 	Reset: "\x1b[0m",

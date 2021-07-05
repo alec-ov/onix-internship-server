@@ -4,14 +4,22 @@ import { Room } from "./room.model.js";
 export const roomService = {
 
 	findOneById: async function (id) {
-		return Room.findById(id).populate("users").lean();
+		return Room
+			.findById(id)
+			.populate("users")
+			.populate("owner")
+			.lean();
 	},
 	findByName: async function (name) {
-		return Room.find({ name: String(name) }).populate("users").lean();
+		return Room
+			.find({ name: String(name) })
+			.populate("users")
+			.populate("owner")
+			.lean();
 	},
 
 	findAll: async function () {
-		return Room.find().lean();
+		return Room.find().populate("owner").lean();
 	},
 
 	createOne: async function (chat) {
@@ -34,6 +42,11 @@ export const roomService = {
 	addUser: async function (chatId, userId) {
 		const chat = await Room.findById(chatId);
 		chat.users.push(userId);
-		return chat.save({runValidators: true});
+		return chat.save();
+	},
+	removeUser: async function (chatId, userId) {
+		const chat = await Room.findById(chatId);
+		chat.users.splice(chat.users.findIndex((id) => id === userId), 1);
+		return chat.save();
 	}
 };

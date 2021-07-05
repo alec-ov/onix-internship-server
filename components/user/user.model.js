@@ -11,9 +11,14 @@ const userSchema = new mongoose.Schema({
 		trim: true,
 		require: true
 	},
+	password: {
+		type: String,
+		require: true
+	},
 	birthday: {
 		type: mongoose.Schema.Types.Date,
-		require: true,
+		require: false,
+		default: null
 	}
 });
 

@@ -23,5 +23,6 @@ const messageSchema = new mongoose.Schema({
 		ref: "Message"
 	}
 }, { timestamps: { createdAt: "sent_at", updatedAt: "edited_at" } });
+messageSchema.index({text: "text"});
 
 export const Message = mongoose.model("Message", messageSchema);

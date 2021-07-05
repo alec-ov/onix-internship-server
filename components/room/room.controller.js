@@ -80,7 +80,7 @@ export const roomController = {
 		const userId = req.body.id;
 
 		const data = await roomService.addUser(id, userId);
-		if (data?.nModified === 1) {
+		if (data) {
 			res.status(StatusCodes.OK);
 			res.json({ status: StatusCodes.OK, message: "Added user to chat" });
 			return;
@@ -90,19 +90,39 @@ export const roomController = {
 		res.json({ status: StatusCodes.NOT_FOUND, message: `joining chat #${id} failed` });
 
 	}),
+	removeUser: Catcher(async (req, res) => {
+		const id = req.params.id;
+		const userId = req.body.id;
+
+		const data = await roomService.removeUser(id, userId);
+		if (data) {
+			res.status(StatusCodes.OK);
+			res.json({ status: StatusCodes.OK, message: "Removed user from chat" });
+			return;
+		}
+
+		res.status(StatusCodes.NOT_FOUND);
+		res.json({ status: StatusCodes.NOT_FOUND, message: `Leaving chat #${id} failed` });
+
+	}),
 
 	addMessage: Catcher(async (req, res) => {
 		const roomId = req.params.id;
 		const room = await roomService.findOneById(roomId);
 		const message = req.body;
-		if (!room.users.includes(message.author)) {
+		if (!room.users.some((user) => user._id == message.author)) {
 			throw new UnauthorizedException(`Invalid author for chat #${roomId}`);
 		}
 		res.send({ data: await messageService.send(message) });
 	}),
 	getMessages: Catcher(async (req, res) => {
 		const roomId = req.params.id;
-		const date = req.query.date;
+		const date = req.body.date;
 		res.send({ data: await messageService.getAll(roomId, date) });
+	}),
+	searchMessages: Catcher(async (req, res) => {
+		const roomId = req.params.id;
+		//const
+		res.send({ data: await messageService.search(roomId, req.body) });
 	})
 };
