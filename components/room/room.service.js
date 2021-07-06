@@ -17,6 +17,13 @@ export const roomService = {
 			.populate("owner")
 			.lean();
 	},
+	findByUser: async function (userId) {
+		return Room
+			.find({ users: userId })
+			.populate("users")
+			.populate("owner")
+			.lean();
+	},
 
 	findAll: async function () {
 		return Room.find().populate("owner").lean();

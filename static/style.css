@@ -1,0 +1,371 @@
+:root {
+	--color-main: #c0eb27;
+	--color-second: #9cc213;
+}
+
+@font-face {
+	font-family: 'Comfortaa';
+	src: url("fonts/Comfortaa-Regular.ttf");
+}
+
+@font-face {
+	font-family: 'Roboto';
+	src: url("fonts/Roboto-Regular.ttf");
+	font-weight: 400;
+}
+@font-face {
+	font-family: 'Roboto';
+	src: url("fonts/Roboto-Light.ttf");
+	font-weight: 300;
+}
+
+@font-face {
+	font-family: 'Roboto';
+	src: url("fonts/Roboto-Bold.ttf");
+	font-weight: 700;
+}
+
+@font-face {
+	font-family: 'Roboto';
+	src: url("fonts/Roboto-Medium.ttf");
+	font-weight: 500;
+}
+
+
+body {
+	box-sizing: border-box;
+	height: 100vh;
+	font-family: "Roboto";
+	margin: 0;
+	padding: 0;
+	padding-top: 3rem;
+}
+
+header {
+	box-sizing: border-box;
+	position: fixed;
+	display: flex;
+	justify-content: space-between;
+	height: 3rem;
+	width: 100%;
+	padding: 0.5rem;
+	top: 0;
+	background-color: white;
+	box-shadow: 0px 0px 3px 0px gray;
+	z-index: 100;
+}
+
+main {
+	box-sizing: border-box;
+	position: relative;
+	height: 80vh;
+	height: calc(100vh - 3rem);
+	width: 100%;
+	margin: 0px;
+	padding: 0px;
+	overflow-y: auto;
+}
+main > * {
+	display: block;
+	height: 100%;
+	overflow-y: auto;
+	margin: 0px;
+}
+nav {
+	position: absolute;
+	box-sizing: border-box;
+	width: fit-content;
+	max-width: 0;
+	overflow: hidden;
+	padding: 1rem 0;
+
+	background-color: whitesmoke;
+	box-shadow: 2px 0px 4px -2px black;
+
+	z-index: 99;
+
+	transition: max-width 0.4s;
+}
+nav.active {
+	max-width: 14rem;
+}
+
+.room_list_element {
+	min-width: 12rem;
+	max-width: 12rem;
+	padding: 0.5rem 0.5rem;
+
+	background-color: rgb(255, 255, 255);
+
+	transition: background-color 0.3s;
+}
+.room_list_element .room_name {
+	margin: 0;
+	font-size: 1.3rem;
+	font-weight: 400;
+}
+
+.room_list_element:hover {
+	background-color: var(--color-second);
+}
+.room_list_element.active {
+	background-color: var(--color-main);
+}
+
+#current_room {
+	width: 100%;
+}
+@media only screen and (min-width: 750px) {
+	main > * {
+		display: inline-block;
+		vertical-align: top;
+	}
+	nav, nav.active {
+		position: relative;
+		max-width: 12rem;
+	}
+	#current_room {
+		width: 70%;
+		width: calc(100% - 12rem);
+	}
+}
+
+#room_header .room_name {
+	margin: 0;
+}
+
+#room_message_list {
+	padding: 0.4rem 1.5rem;
+	padding-bottom: 5rem;
+}
+
+#new_message_form .forward {
+	box-sizing: border-box;
+	height: fit-content;
+	max-height: 0rem;
+	transition: max-height 0.4s;
+	overflow-y: hidden;
+}
+
+#new_message_form.contains_reply .forward {
+	max-height: 12rem;
+}
+#new_message_form.contains_reply .message {
+	width: 90%;
+}
+#new_message_form {
+	box-sizing: content-box;
+	position: fixed;
+	bottom: 0;
+	min-height: 2.5rem;
+	max-height: 14.5rem;
+
+	width: 100%;
+
+	padding: 0.3rem;
+	display: block;
+	z-index: 98;
+	background-color: white;
+	box-shadow: 0px 0px 3px 0px black;
+
+	overflow: hidden;
+	height: fit-content;
+}
+
+fieldset {
+	all: unset;
+}
+input {
+	box-sizing: border-box;
+	border-radius: 0.3rem;
+	padding: 0.3rem;
+
+	margin: 0.2rem;
+	vertical-align: top;
+	align-self: flex-start;
+
+	height: calc(0.6rem + 1em + 2px);
+	min-width: 10rem;
+
+	font-size: 1em;
+
+	background-color: rgb(214, 214, 214);
+	border: 1px solid rgb(214, 214, 214);
+
+	box-shadow: 0px 0px 0px 2px transparent;
+	transition: border 0.3s, background-color 0.3s, box-shadow 0.25s;
+}
+
+input:hover {
+	border: 1px solid var(--color-second);
+	background-color: whitesmoke;
+}
+
+input:focus {
+	border: 1px solid var(--color-main);
+	background-color: whitesmoke;
+	outline: none;
+	box-shadow: 0px 0px 0px 1.5px var(--color-main);
+}
+
+input[type="submit"] {
+	background-color: var(--color-second);
+}
+
+input[type="submit"]:hover, input[type="button"]:hover, button:hover {
+	background-color: var(--color-main);
+}
+
+input[type="submit"]:focus, input[type="button"]:focus, button:focus {
+	background-color: var(--color-main);
+	box-shadow: 0px 0px 0px 2px var(--color-second);
+}
+
+#new_message_form input {
+	font-size: 1.2rem;
+}
+#new_message_form fieldset {
+	width: 100%;
+}
+
+#new_message_form input[type="text"] {
+	box-sizing: border-box;
+	width: 73%;
+	width: calc(100% - clamp(3rem, 20%, 7rem) - 0.8rem - 1.2rem);
+	max-width: 30rem;
+}
+
+#new_message_form input[type="submit"] {
+	box-sizing: border-box;
+	width: 20%;
+
+	max-width: 7rem;
+	min-width: 3rem;
+}
+/* 
+#new_message_form.inactive * {
+	color: gray;
+	background-color: lightgray;
+} */
+
+.message {
+	display: block;
+	position: relative;
+
+	min-width: 7rem;
+	max-width: 25rem;
+
+	font-size: 1rem;
+	border-radius: 0.4rem;
+	box-shadow: 0px 0px 4px -0.5px black;
+	margin: 0.3rem;
+	margin-bottom: 0.5rem;
+	padding: 0.15rem 0.3rem;
+	margin-left: 3rem;
+}
+
+.forward>.message {
+	margin: 0.2rem;
+	margin-left: 0.2rem;
+	font-size: 95%;
+}
+
+.message.far_forward {
+	margin: 0.2rem;
+	margin-left: 0.2rem;
+	background-color: lightgray;
+	color: gray;
+	font-size: 0.9em;
+}
+
+.message .user_icon {
+	font-size: 1rem;
+	position: absolute;
+	left: -2.5rem;
+}
+
+.message_author {
+	font-size: 0.9em;
+	color: rgb(60, 60, 60);
+	font-weight: 500;
+}
+
+.message>* {
+	display: inline-block;
+}
+
+.user_icon {
+	box-sizing: border-box;
+	height: 2em;
+	width: 2em;
+	border-radius: 50%;
+	text-align: center;
+	line-height: 2em;
+	background-color: rgb(255, 183, 0);
+}
+
+.box {
+	display: block;
+	border-radius: 0.4rem;
+	box-shadow: 0px 0px 3px 0px gray;
+	padding: 0.5rem;
+	margin: 0.3rem;
+}
+
+#login_form {
+	position: fixed;
+	top: 3.5rem;
+	width: clamp(12rem, 80%, 25rem);
+
+	font-size: 1.2rem;
+	
+	left: 50%;
+	transform: translateX(-50%);
+
+	z-index: 200;
+}
+
+.hidden {
+	display: none;
+}
+
+#login_form input {
+	width: calc(100% - 0.6rem);
+	margin-bottom: 0.5rem;
+}
+
+#scroll_to_new_button {
+	position: fixed;
+
+	right: 0.5rem;
+	bottom: 6rem;
+
+	min-width: 0;
+	width: 3rem;
+	height: 3rem;
+
+	font-family: 'Comfortaa';
+	font-weight: 500;
+	font-size: 2rem;
+
+	padding: 0;
+	line-height: 3rem;
+
+	border-radius: 50%;
+
+	box-shadow: lightgray 0px 0px 5px 1px;
+}
+#open_room_list_button, #open_room_list_button:hover, #open_room_list_button:focus {
+	background-color: transparent;
+	border: none;
+
+	margin: 0.2rem;
+	margin-top: -0.05rem;
+	padding: 0;
+
+	font-size: 2rem;
+	line-height: 1rem;
+	height: 2rem;
+	width: 2rem;
+	min-width: 2rem;
+}

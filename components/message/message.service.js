@@ -10,10 +10,10 @@ export const messageService = {
 	async getAll(roomId, fromDate = null) {
 		return Message.find({
 			room: roomId,
-			sent_at: { $gte: new Date(fromDate || "2021-01-01"), $lte: new Date() }
+			edited_at: { $gt: new Date(fromDate || "2021-01-01"), $lte: new Date() }
 		})
 			.populate("author")
-			.populate("forwardOf")
+			.populate({ path: "forwardOf", populate: { path: "author" } })
 			.sort({ sent_at: 1 })
 			.lean();
 	},
@@ -27,12 +27,12 @@ export const messageService = {
 			query = query.where("author").equals(author);
 
 		if (fromDate || toDate)
-			query = query.where("sent_at").gte(fromDate ?? new Date("2021-01-01")).lte(toDate ?? new Date());
+			query = query.where("edited_at").gte(fromDate ?? new Date("2021-01-01")).lte(toDate ?? new Date());
 
 		return query
 			.where("room").equals(roomId)
 			.populate("author")
-			.populate("forwardOf")
+			.populate({ path: "forwardOf", populate: { path: "author" } })
 			.sort({ sent_at: 1 })
 			.lean();
 	},

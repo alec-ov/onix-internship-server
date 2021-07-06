@@ -10,6 +10,9 @@ export const userService = {
 	findByName: async function (name) {
 		return User.find({name: String(name)}).lean();
 	},
+	findByEmail: async function (email) {
+		return User.findOne({email: String(email)}).lean();
+	},
 
 	findAll: async function () {
 		return User.find().lean();

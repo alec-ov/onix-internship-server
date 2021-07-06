@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="/style.css">
+	<title>SChat</title>
+</head>
+
+<body>
+	<header>
+		<input type="button" value="☰" id="open_room_list_button">
+		<section id="room_header">
+		</section>
+
+		<article id="current_user_icon">
+		</article>
+		<input type=button id="login_button" value="Log in">
+	</header>
+	<form id="login_form" class="box hidden">
+		<input type="email" name="email" required>
+		<input type="password" name="password" required>
+		<input type="submit">
+	</form>
+	<main>
+		<nav id="room_list">
+
+		</nav><!--
+		--><article id="current_room">
+
+			<section id="room_message_list">
+
+			</section>
+			<input type="button" id="scroll_to_new_button" value="↓">
+			<form id="new_message_form" class="inactive">
+				<section class="forward" id="new_message_forward">
+				</section>
+				<fieldset disabled>
+					<input type="text" name="forwardOf" class="hidden">
+					<input type="text" name="text" autocomplete="off">
+					<input type="submit" value="go">
+				</fieldset>
+			</form>
+
+			<article id="message_options" class="box hidden">
+				<input type="button" value="reply" id="message_reply_button">
+				<input type="button" value="edit" disabled>
+				<input type="button" value="delete" disabled>
+				</form>
+			</article>
+	</main>
+
+	<script src="/scripts/events.js" type="module"></script>
+</body>
+
+</html>

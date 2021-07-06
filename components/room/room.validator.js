@@ -28,8 +28,13 @@ export const roomValidator = {
 		})
 	},
 	getMessages: {
-		body: Joi.object({
+		query: Joi.object({
 			date: Joi.string().isoDate().optional()
+		})
+	},
+	findByUser: {
+		query: Joi.object({
+			user: Joi.string().custom( joiIsID, "validate ObjectID").required()
 		})
 	},
 	searchMessages: messageValidator.search,

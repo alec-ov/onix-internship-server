@@ -1,5 +1,10 @@
 import mongoose from "mongoose";
 
+/**
+ * Converts "unsafe" async middleware to a new middleware
+ * @param {function(Request, Response, Function)} handler async middleware
+ * @returns new async middleware that passes all exceptionst to next()
+ */
 export function Catcher(handler) {
 	return async (req, res, next) => {
 		try {

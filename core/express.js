@@ -1,13 +1,20 @@
 import express, { json, urlencoded } from "express";
+import cookieParser from "cookie-parser";
+
 import { TransformError } from "./error.js";
+
 
 import helmet from "helmet";
 
 const app = express();
 
+app.use(helmet({contentSecurityPolicy: false}));
+
 app.use(json());
 app.use(urlencoded({ extended: true }));
-app.use(helmet());
+app.use(cookieParser());
+
+app.use(express.static("static"));
 
 export const addLastMiddleware = () => {
 	app.use(TransformError);

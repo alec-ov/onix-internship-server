@@ -23,6 +23,11 @@ const roomSchema = new mongoose.Schema({
 		ref: "User",
 		require: true
 	},
+	// lastMessage: {
+	// 	type: Schema.Types.Date,
+	// 	require: false,
+	// 	default: null
+	// }
 	// messages: [{
 	// 	type: Schema.Types.ObjectId,
 	// 	ref: "Message"

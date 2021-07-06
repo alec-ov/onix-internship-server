@@ -4,6 +4,20 @@ import { roomService } from "./room.service.js";
 import { messageService } from "../message/message.service.js";
 import { UnauthorizedException } from "../../core/error.js";
 
+const checkOwner = (req, chat) => {
+	if (req.user) {
+		if (chat.owner === req.user.id || req.user.role == "admin") {
+			return true;
+		}
+		else {
+			throw new UnauthorizedException("Incorrect premissions");
+		}
+	}
+	else {
+		throw new UnauthorizedException("Login required");
+	}
+};
+
 export const roomController = {
 	findAll: Catcher(async (req, res) => {
 		res.status(StatusCodes.OK);
@@ -33,6 +47,18 @@ export const roomController = {
 			res.json({ status: StatusCodes.NOT_FOUND, message: `chat {name: "${name}"} not found.` });
 		}
 	}),
+	findByUser: Catcher(async (req, res) => {
+		const userId = String(req.query.user);
+		const chats = await roomService.findByUser(userId);
+		if (chats) {
+			res.status(StatusCodes.OK);
+			res.json({ status: StatusCodes.OK, message: "found", data: chats });
+		}
+		else {
+			res.status(StatusCodes.NOT_FOUND);
+			res.json({ status: StatusCodes.NOT_FOUND, message: `chats for user #${userId} not found.` });
+		}
+	}),
 	addOne: Catcher(async (req, res, next) => {
 		const chat = req.body;
 		try {
@@ -48,10 +74,11 @@ export const roomController = {
 	}),
 	deleteOneById: Catcher(async (req, res) => {
 		const id = req.params.id;
-		const chat = await roomService.deleteOneById(id);
-		if (chat) {
+		const chat = await roomService.findOneById(id);
+		if (chat && checkOwner(req, chat)) {
+			const data = await roomService.removeOneById(id);
 			res.status(StatusCodes.OK);
-			res.json({ status: StatusCodes.OK, message: "deleted", data: chat });
+			res.json({ status: StatusCodes.OK, message: "deleted", data });
 		}
 		else {
 			res.status(StatusCodes.NOT_FOUND);
@@ -60,11 +87,12 @@ export const roomController = {
 	}),
 	updateOneById: Catcher(async (req, res) => {
 		const id = req.params.id;
-		const newUser = req.body;
-		delete newUser._id;
+		const newRoom = req.body;
+		delete newRoom._id;
 
-		const data = await roomService.updateOneById(id, newUser);
-		if (data) {
+		const room = await roomService.findOneById(id);
+		if (room && checkOwner(req, room)) {
+			const data = await roomService.updateOneById(id, newRoom);
 			res.status(StatusCodes.OK);
 			res.json({ status: StatusCodes.OK, message: "updated", data });
 			return;
@@ -110,19 +138,45 @@ export const roomController = {
 		const roomId = req.params.id;
 		const room = await roomService.findOneById(roomId);
 		const message = req.body;
+		message.room = roomId;
 		if (!room.users.some((user) => user._id == message.author)) {
 			throw new UnauthorizedException(`Invalid author for chat #${roomId}`);
 		}
-		res.send({ data: await messageService.send(message) });
+		const data = await messageService.send(message);
+		
+		if (data) {
+			res.status(StatusCodes.CREATED).json({ status: StatusCodes.CREATED, data });
+		}
+		else {
+			res.status(StatusCodes.INTERNAL_SERVER_ERROR)
+				.json({ status: StatusCodes.INTERNAL_SERVER_ERROR, error: "could not send" });
+		}
 	}),
 	getMessages: Catcher(async (req, res) => {
 		const roomId = req.params.id;
-		const date = req.body.date;
-		res.send({ data: await messageService.getAll(roomId, date) });
+		const date = req.query.date;
+		res.send({ status: StatusCodes.OK, message: "found", data: await messageService.getAll(roomId, date) });
 	}),
 	searchMessages: Catcher(async (req, res) => {
 		const roomId = req.params.id;
 		//const
-		res.send({ data: await messageService.search(roomId, req.body) });
-	})
+		res.send({ status: StatusCodes.OK, message: "found", data: await messageService.search(roomId, req.body) });
+	}),
+
+	middleware: {
+		checkAuthor: (req, res, next) => {
+			if (req.user) {
+				if (req.body.author === req.user.id || req.body.owner == req.user.id) {
+					next();
+				}
+				else {
+					throw new UnauthorizedException("Incorrect premissions");
+				}
+			}
+			else {
+				throw new UnauthorizedException("Login required");
+			}
+			next();
+		}
+	}
 };
