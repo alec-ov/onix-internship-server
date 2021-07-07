@@ -21,8 +21,9 @@ roomRouter.route("/find/")
 
 roomRouter.route("/:id")
 	.get(roomController.findOneById)
-	.delete(roomController.deleteOneById) // checks owner internally
-	.post(joiValidate(roomValidator.update), roomController.updateOneById); // checks owner internally
+	.delete(userController.middleware.checkLogin, roomController.deleteOneById) // checks owner internally
+	.post(joiValidate(roomValidator.update), userController.middleware.checkLogin,
+		roomController.updateOneById); // checks owner internally
 
 roomRouter.post("/:id/send",
 	joiValidate(roomValidator.addMessage), userController.middleware.checkLogin,

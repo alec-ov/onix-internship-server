@@ -160,7 +160,7 @@ export const roomController = {
 	searchMessages: Catcher(async (req, res) => {
 		const roomId = req.params.id;
 		//const
-		res.send({ status: StatusCodes.OK, message: "found", data: await messageService.search(roomId, req.body) });
+		res.send({ status: StatusCodes.OK, message: "found", data: await messageService.search(roomId, req.query) });
 	}),
 
 	middleware: {

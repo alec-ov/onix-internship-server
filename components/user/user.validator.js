@@ -19,7 +19,6 @@ export const userValidator = {
 	update: {
 		body: Joi.object({
 			name: Joi.string().min(2),
-			fullName: Joi.string().min(2),
 			email: Joi.string().email(),
 			birthday: Joi.string().isoDate()
 		})
