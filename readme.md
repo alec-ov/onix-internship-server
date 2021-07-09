@@ -3,7 +3,7 @@ This is a small chat server made for educational purposes.
 *.env* Should contain:
 - `PORT` server hosting port.
 - `DB_PASSWORD` MongoDB atlas password.
-- `JWT_SECRET` a string that will be used whrn signing and verifying tokens.
+- `JWT_SECRET` a string that will be used when signing and verifying tokens.
 ## Models
 ### User
 - `name` string.
@@ -60,7 +60,7 @@ all rooms are public to read(_for now?_)
 - `post` `/json/room/<id>/join` adds user with `user.id == body.id` to room `id`. _For now_ anyone can "invite" anyone to any room
 - `post` `/json/room/<id>/leave` removes user with `user.id = body.id` from room `id`. _For now_ anyone can "kick" anyone from any room _=)_
 
--`get` `/json/room/name/<name>` Finds all rooms with `room.name` **exactly matching** `name`
+- `get` `/json/room/name/<name>` Finds all rooms with `room.name` **exactly matching** `name`
 
 ### Message
 Does not have routes of its own. All actions are done through `Room`
