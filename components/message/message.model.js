@@ -4,7 +4,8 @@ const { Schema } = mongoose;
 const messageSchema = new mongoose.Schema({
 	text: {
 		type: String,
-		require: true
+		require: false,
+		default: ""
 	},
 	author: {
 		type: Schema.Types.ObjectId,

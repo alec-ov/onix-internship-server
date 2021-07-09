@@ -41,5 +41,11 @@ export const messageService = {
 			.populate("author")
 			.populate("forwardOf")
 			.lean();
+	},
+	async deleteOne(id) {
+		return Message.findByIdAndUpdate(id, {text: "", forwardOf: null});
+	},
+	async getOneEditable(id) {
+		return Message.findById(id).exec();
 	}
 };

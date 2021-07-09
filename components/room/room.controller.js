@@ -143,13 +143,55 @@ export const roomController = {
 			throw new UnauthorizedException(`Invalid author for chat #${roomId}`);
 		}
 		const data = await messageService.send(message);
-		
+
 		if (data) {
 			res.status(StatusCodes.CREATED).json({ status: StatusCodes.CREATED, data });
 		}
 		else {
 			res.status(StatusCodes.INTERNAL_SERVER_ERROR)
 				.json({ status: StatusCodes.INTERNAL_SERVER_ERROR, error: "could not send" });
+		}
+	}),
+	editMessage: Catcher(async (req, res) => {
+		const roomId = req.params.id;
+		const room = await roomService.findOneById(roomId);
+		const newMessage = req.body;
+		const message = await messageService.getOneEditable(newMessage.id);
+		if (message && String(message.room) == String(room._id)) {
+			message.text = newMessage.text;
+		}
+		else {
+			res.status(StatusCodes.NOT_FOUND)
+				.json({ status: StatusCodes.NOT_FOUND, error: `could not find message #${newMessage.id}` });
+			return;
+		}
+		const data = await message.save();
+		if (data) {
+			res.status(StatusCodes.OK).json({ status: StatusCodes.OK, message: "modified", data });
+		}
+		else {
+			res.status(StatusCodes.INTERNAL_SERVER_ERROR)
+				.json({ status: StatusCodes.INTERNAL_SERVER_ERROR, error: "could not edit message" });
+		}
+	}),
+	deleteMessage: Catcher(async (req, res) => {
+		const roomId = req.params.id;
+		const room = await roomService.findOneById(roomId);
+		const messageId = req.body.id;
+		const message = await messageService.getOneEditable(messageId);
+		if (message && String(message.room) == String(room._id)) {
+			const data = messageService.deleteOne(messageId);
+			if (data) {
+				res.status(StatusCodes.OK).json({ status: StatusCodes.OK, message: "modified", data });
+				return;
+			}
+			else {
+				res.status(StatusCodes.INTERNAL_SERVER_ERROR)
+					.json({ status: StatusCodes.INTERNAL_SERVER_ERROR, error: "could not delete message" });
+			}
+		}
+		else {
+			throw new UnauthorizedException(`could not find message #${messageId}`);
 		}
 	}),
 	getMessages: Catcher(async (req, res) => {

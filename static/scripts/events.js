@@ -16,11 +16,18 @@ UI.sendForm.addEventListener("submit", async (e) => {
 	const formData = new FormData(UI.sendForm);
 	const body = {};
 	if (formData.get("text").length != 0) body.text = formData.get("text");
-	if (formData.get("forwardOf").length != 0) body.forwardOf = formData.get("forwardOf");
-	await UI.sendMessage(body);
+
+	if (formData.get("editOf").length != 0) {
+		body.id = formData.get("editOf");
+		return await UI.editMessage(body);
+	}
+	else if (formData.get("forwardOf").length != 0) {
+		body.forwardOf = formData.get("forwardOf");
+	}
+	return await UI.sendMessage(body);
 });
 
-UI.openRoomListButton.addEventListener("click", ()=> {
+UI.openRoomListButton.addEventListener("click", () => {
 	UI.openRoomList();
 });
 
@@ -38,13 +45,18 @@ document.getElementById("new_message_forward").addEventListener("click", () => {
 
 document.getElementById("room_message_list").addEventListener("scroll", () => {
 	UI.scrollCheck();
+	UI.closeMessageOptions();
+});
+
+UI.messageOptions.addEventListener("focusout", () => {
+	UI.closeMessageOptions();
 });
 
 
 setTimeout(async () => {
 	await DM.init();
 	UI.selectRoom(0);
-	setTimeout(async ()=>{ await UI.updateUser(); UI.scrollToNew(false); }, 200);
+	setTimeout(async () => { await UI.updateUser(); UI.scrollToNew(false); }, 200);
 
 	UI.startTimers();
 }, 100);

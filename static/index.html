@@ -4,7 +4,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="viewport" content="width=device-width, minimum-scale=1">
 	<link rel="stylesheet" type="text/css" href="/general.css">
 	<link rel="stylesheet" type="text/css" href="/style.css">
 	<title>SChat</title>
@@ -45,6 +45,7 @@
 					<section class="forward" id="new_message_forward">
 					</section>
 					<fieldset disabled>
+						<input type="text" name="editOf" class="hidden">
 						<input type="text" name="forwardOf" class="hidden">
 						<input type="text" name="text" autocomplete="off">
 						<input type="submit" value="go">
@@ -53,8 +54,8 @@
 
 				<form id="message_options" class="box hidden">
 					<input type="button" value="reply" id="message_reply_button">
-					<input type="button" value="edit" disabled>
-					<input type="button" value="delete" disabled>
+					<input type="button" value="edit" id="message_edit_button" disabled>
+					<input type="button" value="delete" id="message_delete_button" disabled>
 				</form>
 			</div>
 		</article>

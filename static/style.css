@@ -1,11 +1,17 @@
 
+html {
+	height: 100%;
+}
 body {
 	box-sizing: border-box;
-	height: 100vh;
+	
+	height: 100%;
 	font-family: "Roboto";
 	margin: 0;
 	padding: 0;
 	padding-top: 3rem;
+
+	overflow-y: hidden;
 }
 
 header {
@@ -25,8 +31,8 @@ header {
 main {
 	box-sizing: border-box;
 	position: relative;
-	height: 80vh;
-	height: calc(100vh - 3rem);
+	height: 100%;
+	margin-bottom: 3rem;
 	width: 100%;
 	margin: 0px;
 	padding: 0px;
@@ -81,6 +87,8 @@ nav.active {
 
 #current_room {
 	width: 100%;
+	height: 100%;
+	position: relative;
 }
 #current_room_container {
 	display: flex;
@@ -109,7 +117,7 @@ nav.active {
 
 #room_message_list {
 	padding: 0.4rem 1.5rem;
-	flex-grow: 3;
+	flex-grow: 1;
 	overflow: auto;
 }
 
@@ -229,4 +237,31 @@ nav.active {
 	height: 2rem;
 	width: 2rem;
 	min-width: 2rem;
+}
+
+#message_options {
+	position: absolute;
+	box-sizing: content-box;
+
+	margin: 0;
+
+	left: 3rem;
+	width: 70%;
+	width: calc(100% - 4rem);
+
+	max-width: 11rem;
+	padding: 0.2rem;
+
+	transition: visibility 0.1s 0s, top 0.3s, opacity 0.3s;
+}
+#message_options.hidden {
+	transition: visibility 0.1s 0.4s, top 0.2s, opacity 0.3s;
+	
+	display: block;
+	visibility: hidden;
+	opacity: 0;
+}
+#message_options > * {
+	width: 100%;
+	margin-left: 0;
 }

@@ -39,4 +39,6 @@ export const roomValidator = {
 	},
 	searchMessages: messageValidator.search,
 	addMessage: messageValidator.create,
+	editMessage: messageValidator.edit,
+	deleteMessage: messageValidator.delete,
 };

@@ -25,14 +25,20 @@ roomRouter.route("/:id")
 	.post(joiValidate(roomValidator.update), userController.middleware.checkLogin,
 		roomController.updateOneById); // checks owner internally
 
-roomRouter.post("/:id/send",
-	joiValidate(roomValidator.addMessage), userController.middleware.checkLogin,
-	roomController.middleware.checkAuthor,/**/ roomController.addMessage);
-
 roomRouter.route("/:id/messages")
 	.get(joiValidate(roomValidator.getMessages), roomController.getMessages);
 roomRouter.route("/:id/messages/search")
 	.get(joiValidate(roomValidator.searchMessages), roomController.searchMessages);
+
+roomRouter.post("/:id/messages/send",
+	joiValidate(roomValidator.addMessage), userController.middleware.checkLogin,
+	roomController.middleware.checkAuthor,/**/ roomController.addMessage);
+roomRouter.post("/:id/messages/edit",
+	joiValidate(roomValidator.editMessage), userController.middleware.checkLogin,
+	roomController.middleware.checkAuthor,/**/ roomController.editMessage);
+roomRouter.post("/:id/messages/delete",
+	joiValidate(roomValidator.deleteMessage), userController.middleware.checkLogin,
+	roomController.middleware.checkAuthor,/**/ roomController.deleteMessage);
 
 roomRouter.route("/:id/join")
 	.post(joiValidate(roomValidator.addUser), userController.middleware.checkLogin, roomController.addUser);

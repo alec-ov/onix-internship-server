@@ -6,6 +6,8 @@ export const UI = {
 
 	roomHeader: document.getElementById("room_header"),
 	messageList: document.getElementById("room_message_list"),
+
+	messageOptions: document.getElementById("message_options"),
 	roomList: document.getElementById("room_list"),
 
 	openRoomListButton: document.getElementById("open_room_list_button"),
@@ -23,10 +25,12 @@ export const UI = {
 		//this.startTimers();
 		await DM.getMessages(false);
 
-		DM.getRoom().lastShownMessage = new Date(0);
+		const room = DM.getRoom();
+		if (room) room.lastShownMessage = new Date(0);
 
 		this.updateRooms();
 		this.updateRoom(true);
+		this.scrollToNew(false);
 	},
 	updateRoom(fullRedraw = false) {
 		const room = DM.getRoom();
@@ -50,14 +54,17 @@ export const UI = {
 		if (!room.lastShownMessage) room.lastShownMessage = new Date(0);
 		//messageList.innerHTML = "";
 		for (let msg of room.messages) {
-			if (room.lastShownMessage.getTime() > new Date(msg.edited_at).getTime()) {
+			if (room.lastShownMessage.getTime() >= new Date(msg.edited_at).getTime()) {
 				continue;
 			}
 
 			const el = this.messageList.querySelector("#msg_" + msg._id);
+			
+			if (!msg.text) { el?.remove(); container.innerHTML = ""; continue; }
 			container.innerHTML = DM.messageEl(msg);
 			if (el) {
 				el.innerHTML = container.querySelector("*").innerHTML;
+				el.classList.add("unread");
 			}
 			else {
 				container.querySelector("*").classList.add("unread");
@@ -67,13 +74,14 @@ export const UI = {
 			}
 			const msgEl = el ?? this.messageList.querySelector("#msg_" + msg._id);
 			msgEl.onclick = () => {
-				this.setReply(msg);
+				this.openMessageOptions(msg, msgEl);
+				//this.setReply(msg);
 			};
 
 		}
 		room.lastShownMessage = room.lastMessage;
 
-		if(autoScroll && newMessages) this.scrollToNew();
+		if (autoScroll && newMessages) this.scrollToNew();
 	},
 	updateRooms() {
 		this.roomList.innerHTML = "";
@@ -93,7 +101,7 @@ export const UI = {
 
 			//}
 			const roomEl = document.getElementById("room_" + room._id);
-			
+
 			roomEl.onclick = () => {
 				this.selectRoom(index);
 				this.roomList.classList.remove("active"); // close the list if on narrow screen
@@ -144,6 +152,62 @@ export const UI = {
 		this.clearReply();
 		this.scrollToNew();
 	},
+	async editMessage(body) {
+		await DM.editMessage(body);
+		await this.checkMessageUpdates();
+		this.sendForm.reset();
+		this.clearReply();
+		this.scrollToNew();
+	},
+	async deleteMessage(body) {
+		await DM.deleteMessage(body);
+		await this.checkMessageUpdates();
+		this.sendForm.reset();
+		this.clearReply();
+		this.scrollToNew();
+	},
+
+	openMessageOptions(msg, element) {
+		this.messageOptions.classList.remove("hidden");
+		let top = element.getBoundingClientRect().bottom - this.messageList.getBoundingClientRect().top;
+		if (top + this.messageOptions.offsetHeight > this.messageList.offsetHeight) {
+			top = element.getBoundingClientRect().top - this.messageList.getBoundingClientRect().top
+				- this.messageOptions.offsetHeight;
+		}
+		this.messageOptions.style = `top: ${top}px;`;
+
+		const reply = this.messageOptions.querySelector("#message_reply_button");
+		reply.onclick = () => {
+			this.setReply(msg);
+			this.closeMessageOptions();
+		};
+		const editBtn = this.messageOptions.querySelector("#message_edit_button");
+		const deleteBtn = this.messageOptions.querySelector("#message_delete_button");
+		
+		editBtn.setAttribute("disabled", "true");
+		deleteBtn.setAttribute("disabled", "true");
+		if (DM.User._id == msg.author._id) {
+			editBtn.removeAttribute("disabled");
+			editBtn.onclick = () => {
+				this.setEdit(msg);
+				this.sendForm.querySelector("[name='text']").value = msg.text;
+				
+				this.closeMessageOptions();
+			};
+			
+			deleteBtn.removeAttribute("disabled");
+			deleteBtn.onclick = () => {
+				const res = confirm("Delete this message?");
+				if (res) DM.deleteMessage(msg);
+				
+				this.closeMessageOptions();
+			};
+		}
+		setTimeout(() => reply.focus(), 100);
+	},
+	closeMessageOptions() {
+		this.messageOptions.classList.add("hidden");
+	},
 
 
 	setReply(msg) {
@@ -155,6 +219,18 @@ export const UI = {
 		this.sendForm.querySelector("[name='forwardOf']").value = "";
 		this.sendForm.classList.remove("contains_reply");
 		document.getElementById("new_message_forward").innerHTML = "";
+		this.clearEdit();
+	},
+
+	setEdit(msg) {
+		this.sendForm.querySelector("[name='editOf']").value = msg._id;
+		this.sendForm.classList.add("contains_reply");
+		document.getElementById("new_message_forward").innerHTML = DM.messageEl(msg, 1);
+	},
+	clearEdit() {
+		this.sendForm.querySelector("[name='editOf']").value = "";
+		this.sendForm.classList.remove("contains_reply");
+		document.getElementById("new_message_forward").innerHTML = "";
 	},
 
 	openRoomList() {
@@ -162,9 +238,11 @@ export const UI = {
 	},
 
 	scrollToNew(smooth = true) {
-		this.messageList.querySelector(":scope > .message:last-child").scrollIntoView(
-			{ behavior: (smooth ? "smooth" : "auto"), block: "end" }
-		);
+		const msg = this.messageList.querySelector(":scope > .message:last-child");
+		if (msg)
+			msg.scrollIntoView(
+				{ behavior: (smooth ? "smooth" : "auto"), block: "end" }
+			);
 		for (let msgEl of this.messageList.querySelectorAll(".message.unread")) {
 			msgEl.classList.remove("unread");
 		}

@@ -122,7 +122,7 @@ export const DM = {
 		if (!this.User) return;
 		//msg.room = Rooms[currentRoom]._id;
 		msg.author = this.User._id;
-		const response = await fetch("/json/room/" + this.Rooms[this.currentRoom]._id + "/send",
+		const response = await fetch("/json/room/" + this.Rooms[this.currentRoom]._id + "/messages/send",
 			{
 				method: "post",
 				body: JSON.stringify(msg),
@@ -135,6 +135,54 @@ export const DM = {
 		const result = await response.json();
 
 		if (result.status == 201) {
+			return true;
+		}
+		else {
+			this.error(result.error);
+			return false;
+		}
+	},
+	async editMessage(msg) {
+		if (!this.User) return;
+		//msg.room = Rooms[currentRoom]._id;
+		msg.author = this.User._id;
+		const response = await fetch("/json/room/" + this.Rooms[this.currentRoom]._id + "/messages/edit",
+			{
+				method: "post",
+				body: JSON.stringify(msg),
+				credentials: "include",
+				headers: {
+					"Content-Type": "application/json;charset=utf-8"
+				}
+			});
+		this.updateCookies();
+		const result = await response.json();
+
+		if (result.status == 200) {
+			return true;
+		}
+		else {
+			this.error(result.error);
+			return false;
+		}
+	},
+	async deleteMessage(msg) {
+		if (!this.User) return;
+		//msg.room = Rooms[currentRoom]._id;
+		//msg.author = this.User._id;
+		const response = await fetch("/json/room/" + this.Rooms[this.currentRoom]._id + "/messages/delete",
+			{
+				method: "post",
+				body: JSON.stringify({id: msg._id, author: this.User._id}),
+				credentials: "include",
+				headers: {
+					"Content-Type": "application/json;charset=utf-8"
+				}
+			});
+		this.updateCookies();
+		const result = await response.json();
+
+		if (result.status == 200) {
 			return true;
 		}
 		else {
@@ -184,7 +232,7 @@ export const DM = {
 		if (!name) return;
 		const a = name[0];
 		const b = name.length > 1 ? name[name.length - 1] : "";
-		return `<div class="user_icon"
+		return `<div class="user_icon" role="button"
 		style="background-color: ${this.userColor(user)};${user.darkColor ? "color: white" : ""}">${a + (b ?? "")}</div>`;
 	},
 	/**
@@ -210,13 +258,14 @@ export const DM = {
 		<span class="message_author" style="color: ${this.userColor(message.author)}">${message.author?.name ?? ""}</span><br>
 		${forward ? forward + "<br>" : ""}` +
 			(message.text ? `<span class="message_text">${message.text}</span>` : "") +
-			"</article>";
+			`<time>${message.edited_at==message.sent_at?"":"edited "}${new Date(message.edited_at).toLocaleTimeString()}</time>
+			</article>`;
 	},
 	roomHeaderEl(room) {
 		return `<h2 class="room_name">${room.name}</h2>`;
 	},
 	roomListEl(room) {
-		return `<div id="room_${room._id}" class="room_list_element"><h2 class="room_name">${room.name}</h2></div>`;
+		return `<div id="room_${room._id}" role="button" class="room_list_element"><h2 class="room_name">${room.name}</h2></div>`;
 	},
 
 	getRoom() {

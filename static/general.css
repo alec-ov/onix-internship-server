@@ -79,6 +79,10 @@ input[type="submit"]:hover, input[type="button"]:hover, button:hover {
 }
 
 input[type="submit"]:focus, input[type="button"]:focus, button:focus {
+	/* background-color: var(--color-main); */
+	box-shadow: 0px 0px 0px 2px var(--color-second-transparent);
+}
+input[type="submit"]:active, input[type="button"]:active, button:active {
 	background-color: var(--color-main);
 	box-shadow: 0px 0px 0px 2px var(--color-second-transparent);
 }
@@ -128,6 +132,12 @@ input[type="submit"]:focus, input[type="button"]:focus, button:focus {
 }
 .unread {
 	background-color: rgb(255, 255, 109);
+}
+
+.message time {
+	font-size: 0.6rem;
+	color: rgb(59, 59, 59);
+	float: right;
 }
 
 .forward>.message {

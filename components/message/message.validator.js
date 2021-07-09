@@ -15,7 +15,26 @@ export const messageValidator = {
 		// or a reply(both fields defined)
 		,
 		params: Joi.object({
-			id: Joi.string().custom(joiIsID, "ckeck ID").required()
+			id: Joi.string().custom(joiIsID, "ckeck ID").required() /** roomId */
+		})
+	},
+	edit: {
+		body: Joi.object({
+			id: Joi.string().custom(joiIsID, "ckeck ID").required(),
+			author: Joi.string().custom(joiIsID, "ckeck ID").required(),
+			text: Joi.string().min(1).required()
+		}),
+		params: Joi.object({
+			id: Joi.string().custom(joiIsID, "ckeck ID").required() /** roomId */
+		})
+	},
+	delete: {
+		body: Joi.object({
+			id: Joi.string().custom(joiIsID, "ckeck ID").required(),
+			author: Joi.string().custom(joiIsID, "ckeck ID").required(),
+		}),
+		params: Joi.object({
+			id: Joi.string().custom(joiIsID, "ckeck ID").required() /** roomId */
 		})
 	},
 	search: {
