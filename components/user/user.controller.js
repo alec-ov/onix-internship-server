@@ -122,7 +122,16 @@ export const userController = {
 		checkLogin: Catcher(async (req, res, next) => {
 			try {
 				const token = jwt.verify(req.cookies.userToken, process.env.JWT_SECRET);
-				req.user = token;
+				const user = await userService.findOneById(token._id);
+				if (user) {
+					req.user = user;
+					next();
+				}
+				else {
+					res.cookie("userToken", "", { maxAge: 1 });
+					res.cookie("user", "", { maxAge: 1 });
+					res.status(StatusCodes.FORBIDDEN).json({ status: StatusCodes.FORBIDDEN, message: "session terminated" });
+				}
 			}
 			catch (e) {
 				if (e instanceof jwt.JsonWebTokenError) {
@@ -130,7 +139,7 @@ export const userController = {
 				}
 				throw e;
 			}
-			next();
+
 		}),
 		onlyFor(...roles) {
 			return Catcher(async (req, res, next) => {

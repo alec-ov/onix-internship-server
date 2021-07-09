@@ -1,36 +1,3 @@
-:root {
-	--color-main: #c0eb27;
-	--color-second: #9cc213;
-}
-
-@font-face {
-	font-family: 'Comfortaa';
-	src: url("fonts/Comfortaa-Regular.ttf");
-}
-
-@font-face {
-	font-family: 'Roboto';
-	src: url("fonts/Roboto-Regular.ttf");
-	font-weight: 400;
-}
-@font-face {
-	font-family: 'Roboto';
-	src: url("fonts/Roboto-Light.ttf");
-	font-weight: 300;
-}
-
-@font-face {
-	font-family: 'Roboto';
-	src: url("fonts/Roboto-Bold.ttf");
-	font-weight: 700;
-}
-
-@font-face {
-	font-family: 'Roboto';
-	src: url("fonts/Roboto-Medium.ttf");
-	font-weight: 500;
-}
-
 
 body {
 	box-sizing: border-box;
@@ -52,7 +19,7 @@ header {
 	top: 0;
 	background-color: white;
 	box-shadow: 0px 0px 3px 0px gray;
-	z-index: 100;
+	z-index: 102;
 }
 
 main {
@@ -115,6 +82,12 @@ nav.active {
 #current_room {
 	width: 100%;
 }
+#current_room_container {
+	display: flex;
+	flex-direction: column;
+
+	height: 100%;
+}
 @media only screen and (min-width: 750px) {
 	main > * {
 		display: inline-block;
@@ -136,7 +109,25 @@ nav.active {
 
 #room_message_list {
 	padding: 0.4rem 1.5rem;
-	padding-bottom: 5rem;
+	flex-grow: 3;
+	overflow: auto;
+}
+
+#new_message_form {
+	box-sizing: content-box;
+	position: relative;
+	/* bottom: 0; */
+	max-height: 14.5rem;
+	height: fit-content;
+
+	width: 90%;
+	width: calc(100% - 0.6rem);
+
+	padding: 0.3rem;
+	display: block;
+	z-index: 98;
+	background-color: white;
+	box-shadow: 0px 0px 3px 0px black;
 }
 
 #new_message_form .forward {
@@ -152,73 +143,6 @@ nav.active {
 }
 #new_message_form.contains_reply .message {
 	width: 90%;
-}
-#new_message_form {
-	box-sizing: content-box;
-	position: fixed;
-	bottom: 0;
-	min-height: 2.5rem;
-	max-height: 14.5rem;
-
-	width: 100%;
-
-	padding: 0.3rem;
-	display: block;
-	z-index: 98;
-	background-color: white;
-	box-shadow: 0px 0px 3px 0px black;
-
-	overflow: hidden;
-	height: fit-content;
-}
-
-fieldset {
-	all: unset;
-}
-input {
-	box-sizing: border-box;
-	border-radius: 0.3rem;
-	padding: 0.3rem;
-
-	margin: 0.2rem;
-	vertical-align: top;
-	align-self: flex-start;
-
-	height: calc(0.6rem + 1em + 2px);
-	min-width: 10rem;
-
-	font-size: 1em;
-
-	background-color: rgb(214, 214, 214);
-	border: 1px solid rgb(214, 214, 214);
-
-	box-shadow: 0px 0px 0px 2px transparent;
-	transition: border 0.3s, background-color 0.3s, box-shadow 0.25s;
-}
-
-input:hover {
-	border: 1px solid var(--color-second);
-	background-color: whitesmoke;
-}
-
-input:focus {
-	border: 1px solid var(--color-main);
-	background-color: whitesmoke;
-	outline: none;
-	box-shadow: 0px 0px 0px 1.5px var(--color-main);
-}
-
-input[type="submit"] {
-	background-color: var(--color-second);
-}
-
-input[type="submit"]:hover, input[type="button"]:hover, button:hover {
-	background-color: var(--color-main);
-}
-
-input[type="submit"]:focus, input[type="button"]:focus, button:focus {
-	background-color: var(--color-main);
-	box-shadow: 0px 0px 0px 2px var(--color-second);
 }
 
 #new_message_form input {
@@ -248,71 +172,7 @@ input[type="submit"]:focus, input[type="button"]:focus, button:focus {
 	background-color: lightgray;
 } */
 
-.message {
-	display: block;
-	position: relative;
-
-	min-width: 7rem;
-	max-width: 25rem;
-
-	font-size: 1rem;
-	border-radius: 0.4rem;
-	box-shadow: 0px 0px 4px -0.5px black;
-	margin: 0.3rem;
-	margin-bottom: 0.5rem;
-	padding: 0.15rem 0.3rem;
-	margin-left: 3rem;
-}
-
-.forward>.message {
-	margin: 0.2rem;
-	margin-left: 0.2rem;
-	font-size: 95%;
-}
-
-.message.far_forward {
-	margin: 0.2rem;
-	margin-left: 0.2rem;
-	background-color: lightgray;
-	color: gray;
-	font-size: 0.9em;
-}
-
-.message .user_icon {
-	font-size: 1rem;
-	position: absolute;
-	left: -2.5rem;
-}
-
-.message_author {
-	font-size: 0.9em;
-	color: rgb(60, 60, 60);
-	font-weight: 500;
-}
-
-.message>* {
-	display: inline-block;
-}
-
-.user_icon {
-	box-sizing: border-box;
-	height: 2em;
-	width: 2em;
-	border-radius: 50%;
-	text-align: center;
-	line-height: 2em;
-	background-color: rgb(255, 183, 0);
-}
-
-.box {
-	display: block;
-	border-radius: 0.4rem;
-	box-shadow: 0px 0px 3px 0px gray;
-	padding: 0.5rem;
-	margin: 0.3rem;
-}
-
-#login_form {
+#login_form > .box {
 	position: fixed;
 	top: 3.5rem;
 	width: clamp(12rem, 80%, 25rem);
@@ -335,10 +195,10 @@ input[type="submit"]:focus, input[type="button"]:focus, button:focus {
 }
 
 #scroll_to_new_button {
-	position: fixed;
+	position: absolute;
 
-	right: 0.5rem;
-	bottom: 6rem;
+	right: 1rem;
+	top: -4rem;
 
 	min-width: 0;
 	width: 3rem;
@@ -354,6 +214,7 @@ input[type="submit"]:focus, input[type="button"]:focus, button:focus {
 	border-radius: 50%;
 
 	box-shadow: lightgray 0px 0px 5px 1px;
+	background-color: whitesmoke;
 }
 #open_room_list_button, #open_room_list_button:hover, #open_room_list_button:focus {
 	background-color: transparent;

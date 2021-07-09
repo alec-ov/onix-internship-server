@@ -21,12 +21,14 @@ export const UI = {
 
 		//this.stopTimers();
 		//this.startTimers();
-		await DM.getMessages();
+		await DM.getMessages(false);
+
+		DM.getRoom().lastShownMessage = new Date(0);
 
 		this.updateRooms();
-		this.updateRoom();
+		this.updateRoom(true);
 	},
-	updateRoom() {
+	updateRoom(fullRedraw = false) {
 		const room = DM.getRoom();
 		if (!room) {
 			this.roomHeader.innerHTML = "";
@@ -34,18 +36,34 @@ export const UI = {
 
 			return;
 		}
+		if (fullRedraw) {
+			this.messageList.innerHTML = "";
+			console.log(fullRedraw);
+		}
+
+		const autoScroll = this.CheckAutoScrollToNew();
+		let newMessages = false;
 
 		this.roomHeader.innerHTML = DM.roomHeaderEl(room);
 		const container = document.createElement("div");
+
+		if (!room.lastShownMessage) room.lastShownMessage = new Date(0);
 		//messageList.innerHTML = "";
 		for (let msg of room.messages) {
+			if (room.lastShownMessage.getTime() > new Date(msg.edited_at).getTime()) {
+				continue;
+			}
+
 			const el = this.messageList.querySelector("#msg_" + msg._id);
 			container.innerHTML = DM.messageEl(msg);
 			if (el) {
 				el.innerHTML = container.querySelector("*").innerHTML;
 			}
 			else {
-				this.messageList.append(...container.childNodes); 
+				container.querySelector("*").classList.add("unread");
+				this.messageList.append(...container.childNodes);
+
+				newMessages = true;
 			}
 			const msgEl = el ?? this.messageList.querySelector("#msg_" + msg._id);
 			msgEl.onclick = () => {
@@ -53,14 +71,11 @@ export const UI = {
 			};
 
 		}
+		room.lastShownMessage = room.lastMessage;
+
+		if(autoScroll && newMessages) this.scrollToNew();
 	},
 	updateRooms() {
-		//const container = document.createElement("div");
-
-		// for (let el of this.roomList.querySelectorAll(".active")) {
-		// 	el.classList.remove("active");
-		// }
-
 		this.roomList.innerHTML = "";
 
 		for (let index in DM.Rooms) {
@@ -75,22 +90,18 @@ export const UI = {
 			// 	el.innerHTML = container.querySelector("*").innerHTML;
 			// }
 			// else {
-			
+
 			//}
 			const roomEl = document.getElementById("room_" + room._id);
-			//if (!roomEl.onclick) { // only add this listener if it's a new room
-			
 			
 			roomEl.onclick = () => {
 				this.selectRoom(index);
+				this.roomList.classList.remove("active"); // close the list if on narrow screen
 			};
-			
+
 			if (index == DM.currentRoom) {
 				roomEl.classList.add("active");
-				//return;
 			}
-			
-			//}
 		}
 	},
 	async updateUser() {
@@ -150,8 +161,28 @@ export const UI = {
 		this.roomList.classList.toggle("active");
 	},
 
-	scrollToNew() {
-		this.messageList.scrollIntoView({ behavior: "smooth", block: "end" });
+	scrollToNew(smooth = true) {
+		this.messageList.querySelector(":scope > .message:last-child").scrollIntoView(
+			{ behavior: (smooth ? "smooth" : "auto"), block: "end" }
+		);
+		for (let msgEl of this.messageList.querySelectorAll(".message.unread")) {
+			msgEl.classList.remove("unread");
+		}
+	},
+
+	scrollCheck() {
+		if (this.messageList.scrollHeight - this.messageList.scrollTop < this.messageList.offsetHeight + 20) {
+			for (let msgEl of this.messageList.querySelectorAll(".message.unread")) {
+				msgEl.classList.remove("unread");
+			}
+		}
+	},
+
+	/**
+	 * Checks the current scroll position and determines if auto scroll to new messages is needed
+	 */
+	CheckAutoScrollToNew() {
+		return (this.messageList.scrollHeight - this.messageList.scrollTop < this.messageList.offsetHeight + 60);
 	},
 
 	async checkMessageUpdates() {

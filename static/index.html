@@ -5,6 +5,7 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="/general.css">
 	<link rel="stylesheet" type="text/css" href="/style.css">
 	<title>SChat</title>
 </head>
@@ -19,37 +20,44 @@
 		</article>
 		<input type=button id="login_button" value="Log in">
 	</header>
-	<form id="login_form" class="box hidden">
-		<input type="email" name="email" required>
-		<input type="password" name="password" required>
-		<input type="submit">
+	<form id="login_form" class="full hidden">
+		<div class="box">
+			<h3>Login</h3>
+			<label for="login_form_email">e-mail</label>
+			<input type="email" id="login_form_email" name="email" required>
+			<label for="login_form_password">password</label>
+			<input type="password" id="login_form_password" name="password" required>
+			<input type="submit">
+		</div>
 	</form>
 	<main>
 		<nav id="room_list">
 
 		</nav><!--
-		--><article id="current_room">
+	---><article id="current_room">
+			<div id="current_room_container">
+				<section id="room_message_list">
 
-			<section id="room_message_list">
-
-			</section>
-			<input type="button" id="scroll_to_new_button" value="↓">
-			<form id="new_message_form" class="inactive">
-				<section class="forward" id="new_message_forward">
 				</section>
-				<fieldset disabled>
-					<input type="text" name="forwardOf" class="hidden">
-					<input type="text" name="text" autocomplete="off">
-					<input type="submit" value="go">
-				</fieldset>
-			</form>
 
-			<article id="message_options" class="box hidden">
-				<input type="button" value="reply" id="message_reply_button">
-				<input type="button" value="edit" disabled>
-				<input type="button" value="delete" disabled>
+				<form id="new_message_form" class="inactive">
+					<input type="button" id="scroll_to_new_button" value="↓">
+					<section class="forward" id="new_message_forward">
+					</section>
+					<fieldset disabled>
+						<input type="text" name="forwardOf" class="hidden">
+						<input type="text" name="text" autocomplete="off">
+						<input type="submit" value="go">
+					</fieldset>
 				</form>
-			</article>
+
+				<form id="message_options" class="box hidden">
+					<input type="button" value="reply" id="message_reply_button">
+					<input type="button" value="edit" disabled>
+					<input type="button" value="delete" disabled>
+				</form>
+			</div>
+		</article>
 	</main>
 
 	<script src="/scripts/events.js" type="module"></script>

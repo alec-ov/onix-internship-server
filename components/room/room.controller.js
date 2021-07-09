@@ -166,7 +166,7 @@ export const roomController = {
 	middleware: {
 		checkAuthor: (req, res, next) => {
 			if (req.user) {
-				if (req.body.author === req.user.id || req.body.owner == req.user.id) {
+				if (req.body.author === req.user.id || (req.body.owner == req.user.id || req.user.role == "admin")) {
 					next();
 				}
 				else {
@@ -176,7 +176,6 @@ export const roomController = {
 			else {
 				throw new UnauthorizedException("Login required");
 			}
-			next();
 		}
 	}
 };

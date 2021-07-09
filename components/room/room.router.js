@@ -14,7 +14,7 @@ const joiValidate = (schema) => {
 roomRouter.route("/")
 	.get(roomController.findAll)
 	.post(joiValidate(roomValidator.create), userController.middleware.checkLogin,
-		/*roomController.middleware.checkAuthor,/**/ roomController.addOne);
+		roomController.middleware.checkAuthor,/**/ roomController.addOne);
 
 roomRouter.route("/find/")
 	.get(joiValidate(roomValidator.findByUser), roomController.findByUser);
@@ -27,7 +27,7 @@ roomRouter.route("/:id")
 
 roomRouter.post("/:id/send",
 	joiValidate(roomValidator.addMessage), userController.middleware.checkLogin,
-	/*roomController.middleware.checkAuthor,/**/ roomController.addMessage);
+	roomController.middleware.checkAuthor,/**/ roomController.addMessage);
 
 roomRouter.route("/:id/messages")
 	.get(joiValidate(roomValidator.getMessages), roomController.getMessages);

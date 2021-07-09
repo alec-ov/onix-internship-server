@@ -36,10 +36,15 @@ document.getElementById("new_message_forward").addEventListener("click", () => {
 	UI.clearReply();
 });
 
+document.getElementById("room_message_list").addEventListener("scroll", () => {
+	UI.scrollCheck();
+});
+
+
 setTimeout(async () => {
 	await DM.init();
 	UI.selectRoom(0);
-	setTimeout(()=>UI.updateUser(), 200);
+	setTimeout(async ()=>{ await UI.updateUser(); UI.scrollToNew(false); }, 200);
 
 	UI.startTimers();
 }, 100);

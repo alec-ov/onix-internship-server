@@ -33,7 +33,7 @@ export const DM = {
 		const result = await response.json();
 		if (result.status == 200) {
 			this.User = result.data;
-			
+
 			await this.getRooms();
 
 			return this.User;
@@ -75,7 +75,7 @@ export const DM = {
 			const currentId = this.Rooms[this.currentRoom]?._id ?? 0;
 			this.Rooms = result.data.map((room, index) => {
 				room.messages = [];
-				room.lastMessage = new Date(0).toISOString();
+				room.lastMessage = new Date(0);
 
 				if (room._id == currentId) {
 					this.currentRoom = index; // current room might have moved to another index, update index
@@ -96,7 +96,7 @@ export const DM = {
 		if (!this.Rooms[this.currentRoom]) return false;
 		const response = await fetch(
 			"/json/room/" + this.Rooms[this.currentRoom]._id + "/messages" +
-			(onlyNew ? ("?date=" + this.Rooms[this.currentRoom].lastMessage || new Date()) : ""),
+			(onlyNew ? ("?date=" + this.Rooms[this.currentRoom].lastMessage.toISOString() || new Date()) : ""),
 			{
 				method: "get",
 				credentials: "include"
@@ -108,7 +108,8 @@ export const DM = {
 			if (result.data.length == 0) return false;
 
 			this.Rooms[this.currentRoom].messages.push(...result.data);
-			this.Rooms[this.currentRoom].lastMessage = result.data[result.data.length - 1].edited_at;
+			this.Rooms[this.currentRoom].lastMessage =
+				onlyNew ? new Date(result.data[result.data.length - 1].edited_at) : new Date(0);
 
 			return true;
 		}
@@ -229,6 +230,9 @@ export const DM = {
 		// if (this.currentRoom >= 0)
 		// 	this.Rooms[this.currentRoom].messages = [];
 		this.currentRoom = index;
+		//const day = new Date();
+		//day.setDate(day.getDate() - 5);
+		this.Rooms[this.currentRoom].lastMessage = new Date(0);
 		//await this.getMessages(true);
 		return this.Rooms[this.currentRoom];
 	}
