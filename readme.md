@@ -1,9 +1,9 @@
 This is a small chat server made for educational purposes.
 
 *.env* Should contain:
-`PORT` server hosting port.
-`DB_PASSWORD` MongoDB atlas password.
-`JWT_SECRET` a string that will be used whrn signing and verifying tokens.
+- `PORT` server hosting port.
+- `DB_PASSWORD` MongoDB atlas password.
+- `JWT_SECRET` a string that will be used whrn signing and verifying tokens.
 ## Models
 ### User
 - `name` string.
