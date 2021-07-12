@@ -16,12 +16,13 @@ export class UnauthorizedException extends Error {
 // eslint-disable-next-line no-unused-vars
 export function TransformError(err, req, res, next) {
 	if (err instanceof ValidationError) {
-		res.status(StatusCodes.BAD_REQUEST).json({status: StatusCodes.BAD_REQUEST, error: err});
+		res.status(StatusCodes.BAD_REQUEST).json({ status: StatusCodes.BAD_REQUEST, errors: [err] });
 		return;
 	}
 	if (err instanceof UnauthorizedException) {
-		res.status(StatusCodes.UNAUTHORIZED).json({status: StatusCodes.UNAUTHORIZED, error: err});
+		res.status(StatusCodes.UNAUTHORIZED).json({ status: StatusCodes.UNAUTHORIZED, errors: [err] });
 		return;
 	}
-	res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({status: StatusCodes.INTERNAL_SERVER_ERROR, error: err});
+	let status = err.status ?? StatusCodes.INTERNAL_SERVER_ERROR;
+	res.status(status).json({ status, errors: [err] });
 }

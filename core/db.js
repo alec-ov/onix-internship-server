@@ -6,8 +6,7 @@ if ((process.env.NODE_ENV || "development") == "development" && !process.env.DB_
 	dotenv.config();
 }
 
-const dbUrl = // eslint-disable-next-line max-len
-	`mongodb+srv://db_test_user:${process.env.DB_PASSWORD}@testcluster.t7uy0.mongodb.net/internship-db?retryWrites=true&w=majority`;
+const dbUrl = process.env.DB_URI;
 
 function Connect() {
 	console.log(TStyle.t("Connecting to MongoDB...", TStyle.Bright));
@@ -18,6 +17,7 @@ function Connect() {
 
 Connect();
 const db = mongoose.connection;
+
 db.on("disconnected", () => {
 	console.log(TStyle.t("MongoDB connection lost! Retrying...", TStyle.Warning));
 	Connect();

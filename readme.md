@@ -55,12 +55,12 @@ If defined and `text` is present this message is a "reply".
 		all rooms are public to read(_for now?_)
 	- `post`  `/send` adds `body` as a `Message` to db and links it to room matching `id`. Login required. `message.author` needs to be a userId in this room's `users` array
 	- `post` `/edit` updates the text of a message in this chat. Login required. Only editing of `text` is allowed:
-		`body` = `{id: ObjectId, text: string}`
+		`body` = `{id: String with ObjectId, text: string}`
 	- `post` `/delete` deletes a message in this chat. Login required.
-		`body` = `{id: ObjectId}`
+		`body` = `{id: string with ObjectId}`
 	- `get` `/search?<query>` selects **all** messages of the room that match `query` (all optional):
 		- `text` string (selects messages that __contain__ this text)
-		- `author` ObjectId
+		- `author` string with ObjectId
 		- `fromDate` string with ISO Date
 		- `toDate` string with ISO Date
 - `post` `/json/room/<id>/join` adds user with `user.id == body.id` to room `id`. _For now_ anyone can "invite" anyone to any room
